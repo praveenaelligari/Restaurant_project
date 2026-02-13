@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GourmetDash | Premium Food Delivery</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23ff5200'/><path fill='white' d='M32 20v25h4V20h4v25h4V20h4v25c0 10-8 12-8 22v23h-8V67c0-10-8-12-8-22V20h4zm36 0c8 0 12 6 12 15v30c0 10-8 12-8 22v23h-8V67c0-10-8-12-8-22V35c0-10 4-15 12-15z'/></svg>">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="light-theme">
+    <!-- Loader -->
+    <div id="loading-screen" class="loader-wrapper">
+        <div class="loader-content">
+            <div class="logo-circle" style="width: 80px; height: 80px; font-size: 32px;"><i class="fas fa-bolt"></i>
+            </div>
+            <div class="loader-circle" style="margin-top: -10px; width: 100px; height: 100px; border-width: 2px;"></div>
+        </div>
+    </div>
+
+    <!-- Cart Toggle -->
+    <input type="checkbox" id="cart-toggle" class="cart-panel-toggle">
+    <div class="cart-panel">
+        <div class="cart-header">
+            <h2 class="cart-title">Your Cart</h2>
+            <label for="cart-toggle" style="cursor: pointer; font-size: 20px;"><i class="fas fa-times"></i></label>
+        </div>
+        <div class="cart-items">
+            <!-- Simulated Cart Content -->
+            <div class="empty-cart-msg">
+                <i class="fas fa-shopping-basket" style="font-size: 80px; margin-bottom: 20px; opacity: 0.2;"></i>
+                <p>Your cart is empty.<br>Add some delicious food to get started!</p>
+            </div>
+        </div>
+
+        <div class="coupon-section" id="coupon-section"
+            style="display: none; padding: 15px 30px; border-top: 1px solid #eee;">
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <input type="text" id="coupon-input" placeholder="Enter Coupon Code"
+                    style="flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;">
+                <button onclick="app.applyCoupon()"
+                    style="background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: 600;">APPLY</button>
+            </div>
+            <div id="applied-coupon-msg" style="font-size: 12px; font-weight: 600; color: #60b246;"></div>
+        </div>
+        <button class="checkout-btn">Checkout Now</button>
+    </div>
+
+    <div class="nav-backdrop" id="nav-backdrop" onclick="toggleMobileMenu()"></div>
+
+    <nav id="nav-mobile" class="mobile-nav-panel">
+        <div class="nav-mobile-header">
+            <div class="logo">
+                <div class="logo-circle"><i class="fas fa-utensils"></i></div>
+                <span>Menu</span>
+            </div>
+            <i class="fas fa-times" onclick="toggleMobileMenu()"></i>
+        </div>
+        <ul>
+            <li><a href="#"
+                    onclick="document.querySelector('.search-bar input').focus(); toggleMobileMenu(); return false;"><i
+                        class="fas fa-search"></i> Search</a></li>
+            <li><a href="#" onclick="openOffers(); toggleMobileMenu(); return false;"><i class="fas fa-percent"></i>
+                    Offers</a></li>
+            <li><a href="#" onclick="openOrdersPage(); toggleMobileMenu(); return false;"><i class="fas fa-history"></i>
+                    Orders</a></li>
+            <li><a href="#" onclick="openHelp(); toggleMobileMenu(); return false;"><i class="fas fa-info-circle"></i>
+                    Help</a></li>
+            <li><a href="#"
+                    onclick="alert('Login/Register feature - Click OK to continue as Praveena'); toggleMobileMenu(); return false;"><i
+                        class="fas fa-user"></i> Praveena</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <div class="logo">
+            <div class="logo-circle"><i class="fas fa-utensils"></i></div>
+            <span>Gourmet<span style="color: var(--text-main);">Dash</span></span>
+        </div>
+        <div class="header-right">
+            <nav id="nav-desktop">
+                <ul>
+                    <li><a href="#" onclick="document.querySelector('.search-bar input').focus(); return false;"><i
+                                class="fas fa-search"></i> Search</a></li>
+                    <li><a href="#" onclick="openOffers(); return false;"><i class="fas fa-percent"></i> Offers</a></li>
+                    <li><a href="#" onclick="openOrdersPage(); return false;"><i class="fas fa-history"></i> Orders</a>
+                    </li>
+                    <li><a href="#" onclick="openHelp(); return false;"><i class="fas fa-info-circle"></i> Help</a></li>
+                    <li><a href="#"
+                            onclick="alert('Login/Register feature - Click OK to continue as Praveena'); return false;"><i
+                                class="fas fa-user"></i> Praveena</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <!-- Theme Toggle -->
+                <div class="theme-switch-wrapper">
+                    <label class="theme-switch" for="theme-checkbox">
+                        <input type="checkbox" id="theme-checkbox" />
+                        <div class="slider round">
+                            <i class="fas fa-moon"></i>
+                            <i class="fas fa-sun"></i>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Always visible Cart -->
+                <label for="cart-toggle" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </label>
+
+                <!-- Hamburger Trigger -->
+                <div class="hamburger-menu" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <h1>Premium Flavors Delivered to Your Door</h1>
+        <p>Discover the best food from 20 top-rated restaurants in your area.</p>
+    </div>
+
+    <div class="search-container">
+        <div class="search-bar">
+            <input type="text" placeholder="Search for restaurants, cuisines or dishes...">
+            <button>Search</button>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="section-title">
+            <span id="res-count-text">20 Restaurants to explore</span>
+            <div class="filters-container">
+                <div class="sort-dropdown">
+                    <button class="sort-btn">Relevance <i class="fas fa-chevron-down"></i></button>
+                    <div class="sort-content">
+                        <button class="filter-btn active" data-filter="relevance">Relevance</button>
+                        <button class="filter-btn" data-filter="time">Delivery Time</button>
+                        <button class="filter-btn" data-filter="rating">Rating</button>
+                        <button class="filter-btn" data-filter="cost-low">Cost: Low to High</button>
+                        <button class="filter-btn" data-filter="cost-high">Cost: High to Low</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="restaurant-grid">
+
+            <div class="res-card" data-menu="menu-1">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1589302168068-1c49911d4e6e?w=800&q=90&fm=webp"
+                        alt="Biryani"
+                        onerror="this.src='https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800'">
+                    <div class="img-offer-text">50% OFF UPTO ₹100</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">The Grand Hyderabadi</div>
+                    <div class="res-cuisine">Biryani, Mughlai, North Indian</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.5</div>
+                        <div class="time">28 MINS</div>
+                        <div class="cost">₹300 FOR TWO</div>
+                    </div>
+                </div>
+            </div>
+            <input type="checkbox" id="menu-1" class="menu-toggle">
+
+            <!-- Restaurant 2: Fast Food -->
+            <label for="menu-2" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1571091718767-18b5c1457add?w=800&q=90&fm=webp"
+                        alt="Burgers"
+                        onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800'">
+                    <div class="img-offer-text">₹129 OFF ABOVE ₹600</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Burger King Jr.</div>
+                    <div class="res-cuisine">Burgers, American, Fast Food</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.2</div>
+                        <div class="time">22 MINS</div>
+                        <div class="cost">₹250 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-3" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80" alt="Pizza">
+                    <div class="img-offer-text">₹100 OFF ABOVE ₹499</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Pizza Hut Elite</div>
+                    <div class="res-cuisine">Pizzas, Italian, Pastas</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 3.9</div>
+                        <div class="time">35 MINS</div>
+                        <div class="cost">₹400 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-4" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=600&q=80" alt="Sushi">
+                    <div class="img-offer-text">FREE DELIVERY</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Sakura Zen</div>
+                    <div class="res-cuisine">Sushi, Japanese, Teriyaki</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.8</div>
+                        <div class="time">45 MINS</div>
+                        <div class="cost">₹800 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-5" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&q=80"
+                        alt="North Indian">
+                    <div class="img-offer-text">60% OFF UPTO ₹120</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Punjab Grill</div>
+                    <div class="res-cuisine">North Indian, Thali, Curries</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.4</div>
+                        <div class="time">30 MINS</div>
+                        <div class="cost">₹550 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-6" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=600&q=80"
+                        alt="South Indian Dosa"
+                        onerror="this.src='https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=600&q=80'">
+                    <div class="img-offer-text">TRADITIONAL THALI ₹199</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Dakshin Delights</div>
+                    <div class="res-cuisine">South Indian, Dosa, Idli</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.6</div>
+                        <div class="time">20 MINS</div>
+                        <div class="cost">₹200 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-5" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1589187151003-b73a2f786073?w=600&q=80" alt="Delhi"
+                        onerror="this.src='https://images.unsplash.com/photo-1610192244261-fb3518b2c49b?w=600&q=80'">
+                    <div class="img-offer-text">₹150 OFF ABOVE ₹800</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Delhi Delight</div>
+                    <div class="res-cuisine">North Indian, Street Food</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.3</div>
+                        <div class="time">25 MINS</div>
+                        <div class="cost">₹400 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-6" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=600&q=80" alt="MTR">
+                    <div class="img-offer-text">Bestseller Combo ₹249</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">MTR Express</div>
+                    <div class="res-cuisine">South Indian, Tiffin</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.7</div>
+                        <div class="time">15 MINS</div>
+                        <div class="cost">₹300 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-4" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=600&q=80" alt="Asian">
+                    <div class="img-offer-text">60% OFF UPTO ₹100</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Tokyo Express</div>
+                    <div class="res-cuisine">Asian, Sushi, Noodles</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.6</div>
+                        <div class="time">38 MINS</div>
+                        <div class="cost">₹700 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-1" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&q=80"
+                        alt="Paradise Biryani"
+                        onerror="this.src='https://images.unsplash.com/photo-1642821373181-696a54913e93?w=600&q=80'">
+                    <div class="img-offer-text">FLAT 20% OFF</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Paradise Biryani</div>
+                    <div class="res-cuisine">Hyderabadi, North Indian</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.0</div>
+                        <div class="time">20 MINS</div>
+                        <div class="cost">₹200 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-5" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Indigo">
+                    <div class="img-offer-text">DINNER SPECIAL ₹499+</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Indigo Fine Dine</div>
+                    <div class="res-cuisine">North Indian, Continental</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.9</div>
+                        <div class="time">55 MINS</div>
+                        <div class="cost">₹1200 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-6" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=600&q=80"
+                        alt="Saravana Bhavan"
+                        onerror="this.src='https://images.unsplash.com/photo-1630383249896-424e482df921?w=600&q=80'">
+                    <div class="img-offer-text">BOGO FREE</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Saravana Bhavan</div>
+                    <div class="res-cuisine">South Indian, Veg</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.2</div>
+                        <div class="time">15 MINS</div>
+                        <div class="cost">₹300 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-3" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?w=600&q=80" alt="Luigi">
+                    <div class="img-offer-text">₹125 OFF ABOVE ₹500</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Luigi's Pizzas</div>
+                    <div class="res-cuisine">Italian, Pasta, Pizza</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.4</div>
+                        <div class="time">30 MINS</div>
+                        <div class="cost">₹550 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-4" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=600&q=80" alt="Kyoto">
+                    <div class="img-offer-text">OMAKASE BOX ₹899</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Kyoto Vibes</div>
+                    <div class="res-cuisine">Japanese, Sea Food</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.7</div>
+                        <div class="time">42 MINS</div>
+                        <div class="cost">₹1000 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-1" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80" alt="Mughal">
+                    <div class="img-offer-text">₹200 OFF ON FIRST ORDER</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Mughal Darbar</div>
+                    <div class="res-cuisine">Mughlai, North Indian</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.3</div>
+                        <div class="time">35 MINS</div>
+                        <div class="cost">₹650 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-6" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1630406184470-7fd4840cd48c?w=600&q=80" alt="Anna"
+                        onerror="this.src='https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=600&q=80'">
+                    <div class="img-offer-text">AUTHENTIC TASTE</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Anna's Kitchen</div>
+                    <div class="res-cuisine">South Indian, Tiffin</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.5</div>
+                        <div class="time">18 MINS</div>
+                        <div class="cost">₹250 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-5" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=600&q=80" alt="Curry">
+                    <div class="img-offer-text">LUNCH BOX ₹149</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">The Curry House</div>
+                    <div class="res-cuisine">North Indian, Curries</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.1</div>
+                        <div class="time">24 MINS</div>
+                        <div class="cost">₹400 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-6" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1630383249896-424e482df921?w=600&q=80" alt="Vidyarthi">
+                    <div class="img-offer-text"> Mysore Dosa SPECIAL</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Vidyarthi Bhavan</div>
+                    <div class="res-cuisine">South Indian, Coffee</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 3.7</div>
+                        <div class="time">45 MINS</div>
+                        <div class="cost">₹180 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-4" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=600&q=80" alt="Oceanic"
+                        onerror="this.src='https://images.unsplash.com/photo-1553621042-f6e147245754?w=600&q=80'">
+                    <div class="img-offer-text">FLAT 20% OFF</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Oceanic Sushi</div>
+                    <div class="res-cuisine">Asian, Sushi</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.8</div>
+                        <div class="time">50 MINS</div>
+                        <div class="cost">₹900 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+
+            <label for="menu-1" class="res-card">
+                <div class="res-img">
+                    <img src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&q=80" alt="Royal">
+                    <div class="img-offer-text">ROYAL DEAL 25% OFF</div>
+                </div>
+                <div class="res-info">
+                    <div class="res-name">Royal Mughal Taste</div>
+                    <div class="res-cuisine">Mughlai, North Indian</div>
+                    <div class="res-meta">
+                        <div class="rating"><i class="fas fa-star"></i> 4.6</div>
+                        <div class="time">30 MINS</div>
+                        <div class="cost">₹520 FOR TWO</div>
+                    </div>
+                </div>
+            </label>
+        </div>
+    </main>
+
+    <!-- Menu Modals (Using Checkbox Hack) -->
+    <!-- We'll create 4 template menus that are linked to different restaurants -->
+
+    <!-- Menu 1: Biryani Theme (Mughlai/North Indian) -->
+    <input type="checkbox" id="menu-1" class="menu-toggle">
+    <div class="menu-overlay">
+        <div class="menu-content">
+            <label for="menu-1" class="close-menu"><i class="fas fa-times"></i></label>
+            <div class="menu-header"
+                style="background-image: url('https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=1200');">
+                <div class="menu-header-info">
+                    <h1>Mughal Heritage</h1>
+                    <p>Biryani • North Indian • Mughlai</p>
+                </div>
+            </div>
+            <div class="menu-body">
+                <h3 style="margin-bottom: 20px; border-left: 4px solid var(--primary); padding-left: 10px;">Signature
+                    Menu (9)</h3>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Hyderabadi Dum Biryani</div>
+                        <div class="item-price">₹350</div>
+                        <div class="item-desc">Slow-cooked mutton with fragrant basmati.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Chicken Tikka (6 Pcs)</div>
+                        <div class="item-price">₹280</div>
+                        <div class="item-desc">Tandoor-charred spicy chicken.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Butter Chicken</div>
+                        <div class="item-price">₹320</div>
+                        <div class="item-desc">Velvety tomato gravy with chicken.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Dal Makhani</div>
+                        <div class="item-price">₹220</div>
+                        <div class="item-desc">Overnight simmered black lentils.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1546833998-877b37c2e5c6?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Garlic Naan</div>
+                        <div class="item-price">₹60</div>
+                        <div class="item-desc">Soft leavened bread with garlic.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1601050638917-38068a489aba?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Paneer Tikka Masala</div>
+                        <div class="item-price">₹290</div>
+                        <div class="item-desc">Smoky paneer in rich gravy.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1567188040759-fb8ad883dc6d?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Gulab Jamun</div>
+                        <div class="item-price">₹100</div>
+                        <div class="item-desc">Warm syrupy milk balls.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Rogan Josh</div>
+                        <div class="item-price">₹380</div>
+                        <div class="item-desc">Kashmiri style lamb curry.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Mango Lassi</div>
+                        <div class="item-price">₹90</div>
+                        <div class="item-desc">Creamy yogurt based drink.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1564385233301-0a6165c8f4f4?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu 2: Burger Theme -->
+    <input type="checkbox" id="menu-2" class="menu-toggle">
+    <div class="menu-overlay">
+        <div class="menu-content">
+            <label for="menu-2" class="close-menu"><i class="fas fa-times"></i></label>
+            <div class="menu-header"
+                style="background-image: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1200');">
+                <div class="menu-header-info">
+                    <h1>American Grill</h1>
+                    <p>Burgers • Fast Food • Shakes</p>
+                </div>
+            </div>
+            <div class="menu-body">
+                <h3 style="margin-bottom: 20px; border-left: 4px solid var(--primary); padding-left: 10px;">Gourmet
+                    Selection (8)</h3>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Double Cheese Beast</div>
+                        <div class="item-price">₹250</div>
+                        <div class="item-desc">Stacked high with cheddar.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Peri Peri Wings</div>
+                        <div class="item-price">₹210</div>
+                        <div class="item-desc">Spicy bird's eye chili glaze.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1567620832903-9fc6debc20fa?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Loaded Truffle Fries</div>
+                        <div class="item-price">₹180</div>
+                        <div class="item-desc">With parmesan and herbs.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1573016608438-349f759604df?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Crispy Chicken Burger</div>
+                        <div class="item-price">₹190</div>
+                        <div class="item-desc">Panko-crusted chicken breast.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Veggie Supreme</div>
+                        <div class="item-price">₹160</div>
+                        <div class="item-desc">Garden fresh patty with pesto.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Chocolate Shake</div>
+                        <div class="item-price">₹140</div>
+                        <div class="item-desc">Made with premium cocoa.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Onion Rings</div>
+                        <div class="item-price">₹110</div>
+                        <div class="item-desc">Golden beer-battered rings.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1639122612239-7a3359556dcb?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Apple Pie</div>
+                        <div class="item-price">₹130</div>
+                        <div class="item-desc">Classic warm dessert.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1535920527002-b35e96722eb9?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu 3: Pizza Theme -->
+    <input type="checkbox" id="menu-3" class="menu-toggle">
+    <div class="menu-overlay">
+        <div class="menu-content">
+            <label for="menu-3" class="close-menu"><i class="fas fa-times"></i></label>
+            <div class="menu-header"
+                style="background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1200');">
+                <div class="menu-header-info">
+                    <h1>Italiano Hub</h1>
+                    <p>Pizzas • Pasta • Desserts</p>
+                </div>
+            </div>
+            <div class="menu-body">
+                <h3 style="margin-bottom: 20px; border-left: 4px solid var(--primary); padding-left: 10px;">Pizza &
+                    Pasta (8)</h3>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Pepperoni Classic</div>
+                        <div class="item-price">₹480</div>
+                        <div class="item-desc">Napoletana style with mozzarella.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Alfredo Penne</div>
+                        <div class="item-price">₹350</div>
+                        <div class="item-desc">Creamy mushroom white sauce.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Garlic Knots</div>
+                        <div class="item-price">₹120</div>
+                        <div class="item-desc">Tossed in parsley butter.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1573058629878-83aa70301c9d?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">BBQ Chicken Pizza</div>
+                        <div class="item-price">₹450</div>
+                        <div class="item-desc">With caramelized onions.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Bruschetta</div>
+                        <div class="item-price">₹160</div>
+                        <div class="item-desc">Tomato and basil on crostini.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Arancini Balls</div>
+                        <div class="item-price">₹210</div>
+                        <div class="item-desc">Cheesy rice balls appetizer.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1560717845-968823efbee1?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Tiramisu</div>
+                        <div class="item-price">₹250</div>
+                        <div class="item-desc">Coffee soaked ladyfingers.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Panna Cotta</div>
+                        <div class="item-price">₹200</div>
+                        <div class="item-desc">With berry coulis.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu 4: Sushi/Asian Theme -->
+    <input type="checkbox" id="menu-4" class="menu-toggle">
+    <div class="menu-overlay">
+        <div class="menu-content">
+            <label for="menu-4" class="close-menu"><i class="fas fa-times"></i></label>
+            <div class="menu-header"
+                style="background-image: url('https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=1200');">
+                <div class="menu-header-info">
+                    <h1>Zen Asian</h1>
+                    <p>Sushi • Oriental • Ramen</p>
+                </div>
+            </div>
+            <div class="menu-body">
+                <h3 style="margin-bottom: 20px; border-left: 4px solid var(--primary); padding-left: 10px;">Asian
+                    Specials (8)</h3>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Dragon Roll (8 Pcs)</div>
+                        <div class="item-price">₹650</div>
+                        <div class="item-desc">Prawn tempura and avocado.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Miso Ramen</div>
+                        <div class="item-price">₹420</div>
+                        <div class="item-desc">Rich broth with nori and egg.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Shrimp Gyoza</div>
+                        <div class="item-price">₹280</div>
+                        <div class="item-desc">Pan-seared Japanese potstickers.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1625395005224-0fce37d81724?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Tuna Sashimi</div>
+                        <div class="item-price">₹450</div>
+                        <div class="item-desc">Freshly sliced premium tuna.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1534422298391-e4f8c170db06?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Yakitori Chicken</div>
+                        <div class="item-price">₹210</div>
+                        <div class="item-desc">Skewered and grilled with tare.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1604908815863-ea7aa0bc5d3f?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Edamame</div>
+                        <div class="item-price">₹150</div>
+                        <div class="item-desc">Steamed pods with sea salt.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1606491956689-2ea8c5369511?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Matcha Cheesecake</div>
+                        <div class="item-price">₹220</div>
+                        <div class="item-desc">Green tea infused creamy cake.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1582716401301-b2407dc7563d?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Mochi Ice Cream</div>
+                        <div class="item-price">₹180</div>
+                        <div class="item-desc">Traditional rice dough treat.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu 5: North Indian Specialized -->
+    <input type="checkbox" id="menu-5" class="menu-toggle">
+    <div class="menu-overlay">
+        <div class="menu-content">
+            <label for="menu-5" class="close-menu"><i class="fas fa-times"></i></label>
+            <div class="menu-header"
+                style="background-image: url('https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=1200');">
+                <div class="menu-header-info">
+                    <h1>North Indian Treat</h1>
+                    <p>Tandoor • Curries • Indian Breads</p>
+                </div>
+            </div>
+            <div class="menu-body">
+                <h3 style="margin-bottom: 20px; border-left: 4px solid var(--primary); padding-left: 10px;">North Indian
+                    Flavors (8)</h3>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Shahi Paneer</div>
+                        <div class="item-price">₹350</div>
+                        <div class="item-desc">Soft cottage cheese in almond gravy.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Butter Chicken Masala</div>
+                        <div class="item-price">₹380</div>
+                        <div class="item-desc">Smoky tandoori chicken in makhani gravy.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Paneer Tikka (8 Pcs)</div>
+                        <div class="item-price">₹260</div>
+                        <div class="item-desc">Spicy marinated grilled paneer.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1567188040759-fb8ad883dc6d?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Dal Tadka</div>
+                        <div class="item-price">₹180</div>
+                        <div class="item-desc">Yellow lentils with desi ghee.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1546833998-877b37c2e5c6?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Jeera Rice</div>
+                        <div class="item-price">₹140</div>
+                        <div class="item-desc">Basmati with roasted cumin.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Assorted Naan Basket</div>
+                        <div class="item-price">₹220</div>
+                        <div class="item-desc">Garlic, Butter and Plain naans.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1601050638917-38068a489aba?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Rogan Josh</div>
+                        <div class="item-price">₹420</div>
+                        <div class="item-desc">Aromatic mutton slow-cooked.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Malai Kofta</div>
+                        <div class="item-price">₹310</div>
+                        <div class="item-desc">Fried potato and paneer balls in gravy.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1601050638917-38068a489aba?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu 6: South Indian Specialized -->
+    <input type="checkbox" id="menu-6" class="menu-toggle">
+    <div class="menu-overlay">
+        <div class="menu-content">
+            <label for="menu-6" class="close-menu"><i class="fas fa-times"></i></label>
+            <div class="menu-header"
+                style="background-image: url('https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=1200');">
+                <div class="menu-header-info">
+                    <h1>Dakshin Classic</h1>
+                    <p>Dosa • Idli • Filter Coffee</p>
+                </div>
+            </div>
+            <div class="menu-body">
+                <h3 style="margin-bottom: 20px; border-left: 4px solid var(--primary); padding-left: 10px;">Authentic
+                    South (8)</h3>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Classic Masala Dosa</div>
+                        <div class="item-price">₹120</div>
+                        <div class="item-desc">Crispy crepe with potato masala.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1630383249896-424e482df921?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Mysore Masala Dosa</div>
+                        <div class="item-price">₹140</div>
+                        <div class="item-desc">Spicy chutney layer inside.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Idli Sambar (2 Pcs)</div>
+                        <div class="item-price">₹80</div>
+                        <div class="item-desc">Steamed rice cakes with tangy sambar.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1626777552726-2a651525c34e?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Medu Vada (2 Pcs)</div>
+                        <div class="item-price">₹90</div>
+                        <div class="item-desc">Crispy fried lentil donuts.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1606491956689-2ea8c5369511?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Onion Uttapam</div>
+                        <div class="item-price">₹110</div>
+                        <div class="item-desc">Thick pancake with onion topping.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1608039880830-26bd96fe7d77?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Lemon Rice</div>
+                        <div class="item-price">₹130</div>
+                        <div class="item-desc">Zesty peanut and lemon rice.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1645177623570-520f3d4a2781?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Filter Coffee</div>
+                        <div class="item-price">₹60</div>
+                        <div class="item-desc">Frothy degree coffee.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Payasam</div>
+                        <div class="item-price">₹100</div>
+                        <div class="item-desc">Traditional sweet dessert.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px;">
+            <div>
+                <h2 style="color: var(--primary); margin-bottom: 20px;">GourmetDash</h2>
+                <p style="opacity: 0.6; font-size: 14px;">© 2025 Elligari Praveena Tech. All rights reserved.</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 20px;">Company</h4>
+                <ul
+                    style="list-style: none; opacity: 0.6; font-size: 14px; display: flex; flex-direction: column; gap: 10px;">
+                    <li>About Us</li>
+                    <li>Team</li>
+                    <li>Careers</li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 20px;">Contact</h4>
+                <ul
+                    style="list-style: none; opacity: 0.6; font-size: 14px; display: flex; flex-direction: column; gap: 10px;">
+                    <li>Help & Support</li>
+                    <li>Partner with us</li>
+                    <li>Ride with us</li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 20px;">Legal</h4>
+                <ul
+                    style="list-style: none; opacity: 0.6; font-size: 14px; display: flex; flex-direction: column; gap: 10px;">
+                    <li>Terms & Conditions</li>
+                    <li>Refund & Cancellation</li>
+                    <li>Privacy Policy</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Location Modal -->
+    <div id="location-modal" class="modal">
+        <div class="modal-content location-modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-map-marker-alt"></i> Delivery Location</h2>
+                <span class="modal-close" onclick="closeModal('location-modal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <button id="use-current-location" class="location-btn">
+                    <i class="fas fa-crosshairs"></i> Use Current Location
+                </button>
+                <div class="divider"><span>OR</span></div>
+                <div class="form-group">
+                    <label>Delivery Address *</label>
+                    <textarea id="delivery-address" placeholder="House No., Building Name, Street Address" rows="3"
+                        required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Landmark (Optional)</label>
+                    <input type="text" id="landmark" placeholder="E.g., Near Metro Station">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" id="phone" placeholder="10-digit mobile number" required>
+                </div>
+                <button id="confirm-address" class="btn-primary">Confirm & Proceed</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal">
+        <div class="modal-content payment-modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-credit-card"></i> Select Payment Method</h2>
+                <span class="modal-close" onclick="closeModal('payment-modal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="payment-methods">
+                    <div class="payment-method" data-method="upi">
+                        <i class="fas fa-qrcode"></i>
+                        <div>
+                            <div class="payment-title">UPI</div>
+                            <div class="payment-desc">Google Pay, PhonePe, Paytm</div>
+                        </div>
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="payment-method" data-method="card">
+                        <i class="fas fa-credit-card"></i>
+                        <div>
+                            <div class="payment-title">Credit/Debit Card</div>
+                            <div class="payment-desc">Visa, Mastercard, RuPay</div>
+                        </div>
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="payment-method" data-method="wallet">
+                        <i class="fas fa-wallet"></i>
+                        <div>
+                            <div class="payment-title">Digital Wallets</div>
+                            <div class="payment-desc">Paytm, PhonePe, Amazon Pay</div>
+                        </div>
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="payment-method" data-method="cod">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <div>
+                            <div class="payment-title">Cash on Delivery</div>
+                            <div class="payment-desc">Pay when you receive</div>
+                        </div>
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <button id="place-order-btn" class="btn-primary">Place Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Success Modal -->
+    <div id="success-modal" class="modal">
+        <div class="modal-content success-modal-content">
+            <span class="modal-close" onclick="closeSuccessModal()">&times;</span>
+            <div class="modal-body" id="order-details">
+                <!-- Order details will be inserted here by JavaScript -->
+            </div>
+            <button onclick="closeSuccessModal()" class="btn-primary"
+                style="width: 100%; border-radius: 12px; height: 50px; font-size: 16px; margin-top: 10px;">Continue
+                Shopping</button>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content help-modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-question-circle"></i> Help & Support</h2>
+                <span class="modal-close" onclick="closeHelp()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h3><i class="fas fa-headset"></i> Customer Support</h3>
+                    <p>Available 24/7 to help you</p>
+                    <a href="tel:1800-123-4567" class="help-link">
+                        <i class="fas fa-phone"></i> 1800-123-4567
+                    </a>
+                    <a href="mailto:support@gourmetdash.com" class="help-link">
+                        <i class="fas fa-envelope"></i> support@gourmetdash.com
+                    </a>
+                </div>
+                <div class="help-section">
+                    <h3><i class="fas fa-file-alt"></i> FAQs</h3>
+                    <div class="faq-item">
+                        <strong>How do I track my order?</strong>
+                        <p>You can track your order in real-time from the "My Orders" section.</p>
+                    </div>
+                    <div class="faq-item">
+                        <strong>What is the cancellation policy?</strong>
+                        <p>Orders can be cancelled for free before restaurant confirms the order.</p>
+                    </div>
+                    <div class="faq-item">
+                        <strong>How long does delivery take?</strong>
+                        <p>Most deliveries are completed within 30-45 minutes.</p>
+                    </div>
+                </div>
+                <div class="help-section">
+                    <h3><i class="fas fa-shield-alt"></i> Safety</h3>
+                    <p>All our delivery partners follow strict hygiene protocols. Your food is sealed and contactless
+                        delivery is available.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offers Modal -->
+    <div id="offers-modal" class="modal">
+        <div class="modal-content offers-modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-gift"></i> Offers & Deals</h2>
+                <span class="modal-close" onclick="closeOffers()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="offer-card">
+                    <div class="offer-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-percent"></i>
+                    </div>
+                    <div class="offer-details">
+                        <h3>50% OFF on First Order</h3>
+                        <p>Use code: <strong>FIRST50</strong></p>
+                        <span class="offer-validity">Valid till 28 Feb 2026</span>
+                    </div>
+                </div>
+                <div class="offer-card">
+                    <div class="offer-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="fas fa-motorcycle"></i>
+                    </div>
+                    <div class="offer-details">
+                        <h3>Free Delivery</h3>
+                        <p>Use code: <strong>FREEDEL</strong></p>
+                        <span class="offer-validity">On orders above ₹199</span>
+                    </div>
+                </div>
+                <div class="offer-card">
+                    <div class="offer-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="offer-details">
+                        <h3>Flat ₹100 OFF</h3>
+                        <p>Use code: <strong>SAVE100</strong></p>
+                        <span class="offer-validity">On orders above ₹499</span>
+                    </div>
+                </div>
+                <div class="offer-card">
+                    <div class="offer-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="offer-details">
+                        <h3">Weekend Special</h3>
+                            <p>Use code: <strong>WEEKEND25</strong></p>
+                            <span class="offer-validity">Valid on Sat & Sun only</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order History Modal -->
+    <div id="orders-modal" class="modal">
+        <div class="modal-content orders-modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 style="display: flex; align-items: center; gap: 10px;"><i class="fas fa-history"></i> My Orders</h2>
+                <button class="close-modal" onclick="closeModal('orders-modal')"
+                    style="background:none; border:none; font-size:30px; cursor:pointer;">&times;</button>
+            </div>
+            <div id="orders-list" class="orders-list" style="padding: 20px; max-height: 70vh; overflow-y: auto;">
+                <!-- Orders will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
