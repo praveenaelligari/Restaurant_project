@@ -2250,6 +2250,15 @@ body.dark-theme .main-footer {
         font-size: 24px;
     }
 
+    .search-bar input {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    .search-bar button {
+        padding: 10px 20px;
+    }
+
     .restaurant-grid {
         grid-template-columns: 1fr;
     }
