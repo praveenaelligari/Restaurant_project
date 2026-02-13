@@ -600,7 +600,7 @@ class PaymentManager {
 
         setTimeout(() => {
             const order = {
-                id: 'GD' + Date.now(),
+                id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
                 items: [...app.cart],
                 total: app.getTotal(),
                 payment: this.selectedMethod,

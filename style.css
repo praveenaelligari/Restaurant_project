@@ -1670,6 +1670,8 @@ body.dark-theme .main-footer {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .order-id-section .label {
@@ -1681,6 +1683,8 @@ body.dark-theme .main-footer {
     font-size: 20px;
     font-weight: 800;
     letter-spacing: 1px;
+    word-break: break-all;
+    text-align: right;
 }
 
 .order-details-grid {
