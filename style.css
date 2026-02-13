@@ -336,6 +336,9 @@ body.dark-theme .search-bar:focus-within {
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .search-bar button:hover {
@@ -2253,10 +2256,29 @@ body.dark-theme .main-footer {
     .search-bar input {
         padding: 10px 15px;
         font-size: 14px;
+        flex: 1;
+        min-width: 0;
+        /* Prevents input from pushing out button */
     }
 
     .search-bar button {
-        padding: 10px 20px;
+        padding: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .search-bar button span {
+        display: none;
+    }
+
+    .search-bar button i {
+        margin: 0;
+        font-size: 16px;
     }
 
     .restaurant-grid {
