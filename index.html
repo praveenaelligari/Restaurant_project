@@ -70,6 +70,10 @@
                     Orders</a></li>
             <li><a href="#" onclick="openHelp(); toggleMobileMenu(); return false;"><i class="fas fa-info-circle"></i>
                     Help</a></li>
+            <li><a href="#" id="mobile-theme-toggle"
+                    onclick="document.getElementById('theme-checkbox').click(); toggleMobileMenu(); return false;">
+                    <i class="fas fa-moon"></i> Switch Theme
+                </a></li>
             <li><a href="#"
                     onclick="alert('Login/Register feature - Click OK to continue as Praveena'); toggleMobileMenu(); return false;"><i
                         class="fas fa-user"></i> Praveena</a></li>
@@ -391,7 +395,7 @@
                 </div>
             </label>
 
-            <label for="menu-1" class="res-card">
+            <label for="menu-7" class="res-card">
                 <div class="res-img">
                     <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80" alt="Mughal">
                     <div class="img-offer-text">₹200 OFF ON FIRST ORDER</div>
@@ -494,7 +498,7 @@
     <!-- Menu Modals (Using Checkbox Hack) -->
     <!-- We'll create 4 template menus that are linked to different restaurants -->
 
-    <!-- Menu 1: Biryani Theme (Mughlai/North Indian) -->
+    <!-- Menu 1: Biryani Theme (The Grand Hyderabadi) -->
     <input type="checkbox" id="menu-1" class="menu-toggle">
     <div class="menu-overlay">
         <div class="menu-content">
@@ -502,13 +506,53 @@
             <div class="menu-header"
                 style="background-image: url('https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=1200');">
                 <div class="menu-header-info">
-                    <h1>Mughal Heritage</h1>
+                    <h1>The Grand Hyderabadi</h1>
                     <p>Biryani • North Indian • Mughlai</p>
                 </div>
             </div>
             <div class="menu-body">
                 <h3 style="margin-bottom: 20px; border-left: 4px solid var(--primary); padding-left: 10px;">Signature
                     Menu (9)</h3>
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Hyderabadi Dum Biryani</div>
+                        <div class="item-price">₹350</div>
+                        <div class="item-desc">Slow-cooked mutton with fragrant basmati.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+                <!-- ... other items same as before ... -->
+                <div class="menu-item">
+                    <div class="item-details">
+                        <div class="item-name">Mango Lassi</div>
+                        <div class="item-price">₹90</div>
+                        <div class="item-desc">Creamy yogurt based drink.</div>
+                    </div>
+                    <div class="item-img-container"><img
+                            src="https://images.unsplash.com/photo-1564385233301-0a6165c8f4f4?w=300&q=80"
+                            class="item-img"><button class="add-btn">ADD</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu 7: Mughal Darbar (Cloned from Menu 1) -->
+    <input type="checkbox" id="menu-7" class="menu-toggle">
+    <div class="menu-overlay">
+        <div class="menu-content">
+            <label for="menu-7" class="close-menu"><i class="fas fa-times"></i></label>
+            <div class="menu-header"
+                style="background-image: url('https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=1200');">
+                <div class="menu-header-info">
+                    <h1>Mughal Darbar</h1>
+                    <p>Mughlai • North Indian • Kebabs</p>
+                </div>
+            </div>
+            <div class="menu-body">
+                <h3 style="margin-bottom: 20px; border-left: 4px solid var(--primary); padding-left: 10px;">Royal Menu
+                </h3>
                 <div class="menu-item">
                     <div class="item-details">
                         <div class="item-name">Hyderabadi Dum Biryani</div>
@@ -527,76 +571,6 @@
                     </div>
                     <div class="item-img-container"><img
                             src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=300&q=80"
-                            class="item-img"><button class="add-btn">ADD</button></div>
-                </div>
-                <div class="menu-item">
-                    <div class="item-details">
-                        <div class="item-name">Butter Chicken</div>
-                        <div class="item-price">₹320</div>
-                        <div class="item-desc">Velvety tomato gravy with chicken.</div>
-                    </div>
-                    <div class="item-img-container"><img
-                            src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=300&q=80"
-                            class="item-img"><button class="add-btn">ADD</button></div>
-                </div>
-                <div class="menu-item">
-                    <div class="item-details">
-                        <div class="item-name">Dal Makhani</div>
-                        <div class="item-price">₹220</div>
-                        <div class="item-desc">Overnight simmered black lentils.</div>
-                    </div>
-                    <div class="item-img-container"><img
-                            src="https://images.unsplash.com/photo-1546833998-877b37c2e5c6?w=300&q=80"
-                            class="item-img"><button class="add-btn">ADD</button></div>
-                </div>
-                <div class="menu-item">
-                    <div class="item-details">
-                        <div class="item-name">Garlic Naan</div>
-                        <div class="item-price">₹60</div>
-                        <div class="item-desc">Soft leavened bread with garlic.</div>
-                    </div>
-                    <div class="item-img-container"><img
-                            src="https://images.unsplash.com/photo-1601050638917-38068a489aba?w=300&q=80"
-                            class="item-img"><button class="add-btn">ADD</button></div>
-                </div>
-                <div class="menu-item">
-                    <div class="item-details">
-                        <div class="item-name">Paneer Tikka Masala</div>
-                        <div class="item-price">₹290</div>
-                        <div class="item-desc">Smoky paneer in rich gravy.</div>
-                    </div>
-                    <div class="item-img-container"><img
-                            src="https://images.unsplash.com/photo-1567188040759-fb8ad883dc6d?w=300&q=80"
-                            class="item-img"><button class="add-btn">ADD</button></div>
-                </div>
-                <div class="menu-item">
-                    <div class="item-details">
-                        <div class="item-name">Gulab Jamun</div>
-                        <div class="item-price">₹100</div>
-                        <div class="item-desc">Warm syrupy milk balls.</div>
-                    </div>
-                    <div class="item-img-container"><img
-                            src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=300&q=80"
-                            class="item-img"><button class="add-btn">ADD</button></div>
-                </div>
-                <div class="menu-item">
-                    <div class="item-details">
-                        <div class="item-name">Rogan Josh</div>
-                        <div class="item-price">₹380</div>
-                        <div class="item-desc">Kashmiri style lamb curry.</div>
-                    </div>
-                    <div class="item-img-container"><img
-                            src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=300&q=80"
-                            class="item-img"><button class="add-btn">ADD</button></div>
-                </div>
-                <div class="menu-item">
-                    <div class="item-details">
-                        <div class="item-name">Mango Lassi</div>
-                        <div class="item-price">₹90</div>
-                        <div class="item-desc">Creamy yogurt based drink.</div>
-                    </div>
-                    <div class="item-img-container"><img
-                            src="https://images.unsplash.com/photo-1564385233301-0a6165c8f4f4?w=300&q=80"
                             class="item-img"><button class="add-btn">ADD</button></div>
                 </div>
             </div>
