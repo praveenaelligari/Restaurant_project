@@ -2233,6 +2233,14 @@ body.dark-theme .main-footer {
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 30px !important;
     }
+
+    /* Fix Sort Dropdown Overflow */
+    .sort-content {
+        right: auto;
+        left: 0;
+        min-width: 200px;
+        max-width: calc(100vw - 40px);
+    }
 }
 
 @media (max-width: 480px) {
